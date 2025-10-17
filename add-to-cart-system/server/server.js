@@ -1,5 +1,3 @@
-// server/server.js
-
 const express = require("express");
 const cors = require("cors");
 
@@ -7,34 +5,34 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- In-Memory Database (No Changes) ---
+// --- In-Memory db ---
 const products = [
   {
     product_id: "62722f07-9f9d-4887-a612-413405d3aeaa",
     name: "Dell Laptop",
     price: 100000,
-    image_url: "https://picsum.photos/id/0",
+    image_url: "https://picsum.photos/id/0/500/500",
     stock_quantity: 10,
   },
   {
     product_id: "8ded87ee-696f-427f-923a-77f6a09f35a7",
     name: "Traveler's Coffee Mug",
     price: 80,
-    image_url: "https://picsum.photos/id/30",
+    image_url: "https://picsum.photos/id/30/500/500",
     stock_quantity: 5,
   },
   {
     product_id: "ac24d54b-ff3f-422d-98c9-984bebbcfbb6",
     name: "Apple Macbook Pro",
     price: 200000,
-    image_url: "https://picsum.photos/id/48",
+    image_url: "https://picsum.photos/id/48/500/500",
     stock_quantity: 8,
   },
   {
     product_id: "b42f1ced-0105-498f-ba4e-f9739546cb6f",
     name: "xbox gaming console",
     price: 19.99,
-    image_url: "https://picsum.photos/id/96",
+    image_url: "https://picsum.photos/id/96/500/500",
     stock_quantity: 15,
   },
 ];
@@ -57,7 +55,6 @@ const recalculateCart = () => {
 app.get("/api/products", (req, res) => res.json(products));
 app.get("/api/cart/:userId", (req, res) => res.json(cart));
 
-// POST to add, increment, or decrement item quantity
 app.post("/api/cart/:userId/items", (req, res) => {
   const { productId, quantity } = req.body; // quantity can be 1 or -1
 
@@ -73,7 +70,6 @@ app.post("/api/cart/:userId/items", (req, res) => {
   if (existingItemIndex > -1) {
     const existingItem = cart.items[existingItemIndex];
 
-    // Block incrementing if out of stock
     if (
       quantity > 0 &&
       product.stock_quantity < existingItem.quantity + quantity
@@ -83,7 +79,6 @@ app.post("/api/cart/:userId/items", (req, res) => {
 
     existingItem.quantity += quantity;
 
-    // If quantity drops to 0 or below, remove the item
     if (existingItem.quantity <= 0) {
       cart.items.splice(existingItemIndex, 1);
     }
